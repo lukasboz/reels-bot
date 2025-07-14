@@ -2,7 +2,6 @@ import pyautogui
 import time
 import os
 import shutil
-from playsound import playsound
 
 # === CONSTANTS ===
 CAPCUT_WINDOW_TITLE = "CapCut"
@@ -48,28 +47,37 @@ def export_audio():
     print(f"[INFO] Exporting audio to Downloads...")
     pyautogui.click(x=2014, y=437)
     time.sleep(0.5)
-    pyautogui.click(x=1991, y=531)
+    pyautogui.click(x=2012, y=580)
     time.sleep(5)  # Wait for file to finish downloading
 
-def move_latest_download():
-    print("[INFO] Moving latest downloaded file to assets/input...")
+def move_latest_downloads(n=2):
+    print(f"[INFO] Moving and renaming last {n} downloaded file(s)...")
     files = [os.path.join(DOWNLOADS_FOLDER, f) for f in os.listdir(DOWNLOADS_FOLDER)]
     files = [f for f in files if os.path.isfile(f)]
 
-    if not files:
-        raise FileNotFoundError("No files found in Downloads folder.")
+    if len(files) < n:
+        raise FileNotFoundError(f"Expected at least {n} files in Downloads folder, found {len(files)}.")
 
-    latest_file = max(files, key=os.path.getmtime)
+    # Sort files by modification time, descending
+    latest_files = sorted(files, key=os.path.getmtime, reverse=True)[:n]
 
-    # Generate unique filename based on timestamp and original extension
-    timestamp = time.strftime("%Y%m%d_%H%M%S")
-    ext = os.path.splitext(latest_file)[1]
-    new_filename = f"tts_output_{timestamp}{ext}"
-    dest_path = os.path.join(DEST_FOLDER, new_filename)
+    renamed = 0
+    for file_path in latest_files:
+        ext = os.path.splitext(file_path)[1].lower()
+        if ext == ".mp3":
+            dest_path = os.path.join(DEST_FOLDER, "audio.mp3")
+        elif ext == ".srt":
+            dest_path = os.path.join(DEST_FOLDER, "subtitles.srt")
+        else:
+            print(f"[WARNING] Skipping unsupported file: {file_path}")
+            continue
 
-    shutil.move(latest_file, dest_path)
-    print(f"[INFO] Moved file to {dest_path}")
+        shutil.move(file_path, dest_path)
+        print(f"[INFO] Moved and renamed to {dest_path}")
+        renamed += 1
 
+    if renamed < n:
+        raise ValueError(f"Only {renamed} of {n} expected files were moved and renamed.")
 
 def main():
     try:
@@ -87,7 +95,7 @@ def main():
         input_text(text_to_speak)
         generate_audio()
         export_audio()
-        move_latest_download()
+        move_latest_downloads(n=2)
 
         print("[SUCCESS] TTS process completed successfully!")
 
