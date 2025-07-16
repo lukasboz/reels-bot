@@ -4,8 +4,7 @@ from moviepy.video.tools.subtitles import SubtitlesClip, file_to_subtitles
 from moviepy.audio.fx import *
 from moviepy.audio.AudioClip import *
 from datetime import datetime
-import pysrt
-import os
+import os, random, pysrt
 
 
 # === Paths ===
@@ -13,8 +12,14 @@ VIDEO_PATH = r"assets\input\gameplay.mp4"
 OUTPUT_PATH = r"assets\output\gameplay_portrait.mp4"
 AUDIO_PATH = r"assets\input\audio.mp3"
 SUBTITLE_PATH = r"assets\input\subtitles.srt"
-BACKGROUND_MUSIC_PATH = r"assets\input\music.mp3"
 OUTPUT_DIR = r"assets\output"
+MUSIC_DIR = r"assets\input\music"
+
+def get_random_music_path():
+    music_files = [f for f in os.listdir(MUSIC_DIR) if f.lower().endswith('.mp3')]
+    if not music_files:
+        raise FileNotFoundError(f"No .mp3 files found in {MUSIC_DIR}")
+    return os.path.join(MUSIC_DIR, random.choice(music_files))
 
 def generate_subtitle_clips(sub_path, video_size):
     subs = pysrt.open(sub_path)
@@ -39,8 +44,12 @@ def convert_to_portrait(input_path, output_path):
     
     # Load and validate audio
     audio = AudioFileClip(AUDIO_PATH).subclipped(0)  # Force reload
-    background_music = AudioFileClip(BACKGROUND_MUSIC_PATH).subclipped(0, audio.duration)
-    background_music = background_music.with_effects([MultiplyVolume(0.02)])
+    
+    background_music_path = get_random_music_path()
+    background_music = AudioFileClip(background_music_path).subclipped(0, audio.duration)
+    print(f"[INFO] Using background music: {background_music_path}")
+
+    background_music = background_music.with_effects([MultiplyVolume(0.05)])
 
     final_audio = CompositeAudioClip([audio, background_music])
 
