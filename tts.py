@@ -89,10 +89,15 @@ def main():
 
         if not text_to_speak:
             raise ValueError("Input file is empty.")
+        
+        # Append pause and follow-up phrase
+        pause = "..."
+        follow_up = "Share, like, and follow for more trending stories!"
+        text_to_speak_final = f"{text_to_speak} {pause} {follow_up}"
 
         find_capcut_window()
         select_voice(VOICE_NAME)
-        input_text(text_to_speak)
+        input_text(text_to_speak_final)
         generate_audio()
         export_audio()
         move_latest_downloads(n=2)
