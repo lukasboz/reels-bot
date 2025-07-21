@@ -17,9 +17,8 @@ with open("assets/output/reddit_script.txt", "r", encoding="utf-8") as f:
 prompt = (
     "You're a helpful assistant that edits Reddit-style content for TTS narration.\n"
     "Your task is to:\n"
-    "1. Remove any text that contains 'Title:' or 'Comment (number):', but keep the text after it\n"
-    "2. Remove all but one comment. Pick the most vivid or emotionally rich one.\n"
-    "3. Rewrite that comment as a natural monologue optimized for TTS, (with the title coming first, comment second, separated by two newlines) and removing all references to Reddit.\n"
+    "1. Remove all but one comment. Pick the most vivid or emotionally rich one.\n"
+    "2. Rewrite that comment as a natural monologue optimized for TTS, (with the title coming first, comment second, separated by two newlines) and removing all references to Reddit.\n"
     "Output ONLY the cleaned and rewritten comment with no extra commentary, no titles, no notes, no explanations.\n\n"
     f"{original_text}\n\n"
     "Final monologue:"

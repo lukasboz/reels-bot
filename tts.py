@@ -92,7 +92,7 @@ def main():
         
         # Append pause and follow-up phrase
         pause = "..."
-        follow_up = "Share, like, and follow for more trending stories!"
+        follow_up = "Share, like, and follow for more Reddit stories!"
         text_to_speak_final = f"{text_to_speak} {pause} {follow_up}"
 
         find_capcut_window()

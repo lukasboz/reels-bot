@@ -44,7 +44,7 @@ file_path = r"C:\Users\lukas\Github Projects\reels-bot\assets\input\tts_input.tx
 with open(file_path, 'r', encoding='utf-8') as f:
     first_line = f.readline().strip()  # .strip() removes \n
 
-pyautogui.typewrite(first_line) #add hashtags
+pyautogui.typewrite(first_line + ' #reddit #redditstorytime #narrator #story')
 
 pyautogui.click(x=528, y=1334)
 print("Clicked 'Next' button again")

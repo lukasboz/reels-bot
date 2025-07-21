@@ -5,7 +5,8 @@ scripts = [
     "scrape_reddit.py",
     "story_cleanup.py",
     "tts.py",
-    "create_video.py"
+    "create_video.py", 
+    "publish.py"
 ]
 
 python_executable = sys.executable
